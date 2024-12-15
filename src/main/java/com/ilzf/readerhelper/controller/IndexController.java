@@ -19,7 +19,7 @@ public class IndexController {
     public ModelAndView test(ModelAndView mv) {
         mv.setViewName("/index");
         mv.addObject("title", "欢迎使用Thymeleaf!");
-        System.out.println("");
+//        System.out.println(readerPropertyConfig.getPath());
         return mv;
     }
 

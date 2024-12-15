@@ -1,7 +1,7 @@
 server:
   port: 1322
 reader:
-  base-path: "d:/books"
+  path: "d:/books"
 spring:
   thymeleaf:
     prefix: classpath:/templates/

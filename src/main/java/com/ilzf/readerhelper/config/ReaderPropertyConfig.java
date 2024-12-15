@@ -1,14 +1,11 @@
 package com.ilzf.readerhelper.config;
 
-import jakarta.annotation.PostConstruct;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Data
 @ConfigurationProperties(prefix = "reader")
 public class ReaderPropertyConfig {
-    @PostConstruct
-    public void post() {
-        System.out.println("basePath:" + basePath);
-    }
 
-    private String basePath;
+    private String path;
 }
