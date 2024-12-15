@@ -1,13 +1,11 @@
 package com.ilzf.readerhelper.service;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.HashUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.ilzf.readerhelper.config.ReaderPropertyConfig;
 import com.ilzf.readerhelper.constant.FileType;
 import com.ilzf.readerhelper.entity.BookEntity;
 import com.ilzf.readerhelper.entity.ChapterEntity;
+import com.ilzf.readerhelper.entity.MetInfo;
 import com.ilzf.readerhelper.utils.TextBookUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -16,6 +14,8 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ilzf.readerhelper.constant.Constant.MET_INFO_SUFFIX;
 
 @Service
 public class BookService {
@@ -39,7 +39,7 @@ public class BookService {
         BookEntity result = BookEntity.init(file);
         if (!loadChapter) {
             if (FileType.TXT == result.getFileType()) {
-                result = TextBookUtil.setMetInfo(readerPropertyConfig.getMetInfoPath() + File.separator + result.getTitle() + "." + "metinfo", result);
+                result = TextBookUtil.setMetInfo(readerPropertyConfig.getMetInfoPath() + File.separator + result.getTitle() + MET_INFO_SUFFIX, result);
             }
             return result;
         }
@@ -62,5 +62,11 @@ public class BookService {
             return "";
         }
         return entity.getContent();
+    }
+
+    public void saveMetaData(MetInfo metInfo, String bookTitle) {
+        String metInfoPath = this.readerPropertyConfig.getMetInfoPath();
+        String path = metInfoPath + File.separator + bookTitle + MET_INFO_SUFFIX;
+        FileUtil.writeString(metInfo.toString(), path, StandardCharsets.UTF_8);
     }
 }

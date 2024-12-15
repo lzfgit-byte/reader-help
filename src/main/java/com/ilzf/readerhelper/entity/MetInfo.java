@@ -10,6 +10,10 @@ public class MetInfo {
     private String intro;
     private String coverImg;
 
+    public String toString() {
+        return "author;;" + author + "\nintro;;" + intro + "\ncoverImg;;" + coverImg;
+    }
+
     public static MetInfo toBean(List<String> metInfos) {
         MetInfo metInfo = new MetInfo();
         for (String info : metInfos) {
