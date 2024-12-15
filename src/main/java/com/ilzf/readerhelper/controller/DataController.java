@@ -16,7 +16,8 @@ public class DataController {
      * post /save-meta-data
      */
     @PostMapping("/save-meta-data")
-    public void saveMetaData(@RequestBody MetInfo metInfo, @RequestParam(value = "bookTitle") String bookTitle) {
+    public String saveMetaData(@RequestBody MetInfo metInfo, @RequestParam(value = "bookTitle") String bookTitle) {
         this.bookService.saveMetaData(metInfo, bookTitle);
+        return "ok";
     }
 }

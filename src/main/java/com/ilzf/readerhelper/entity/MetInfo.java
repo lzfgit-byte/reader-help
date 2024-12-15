@@ -23,7 +23,7 @@ public class MetInfo {
                     metInfo.setAuthor(split[1]);
                 } else if ("intro".equals(split[0])) {
                     metInfo.setIntro(split[1]);
-                } else if ("converImg".equals(split[0])) {
+                } else if ("coverImg".equals(split[0])) {
                     metInfo.setCoverImg(split[1]);
                 }
             }

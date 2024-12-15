@@ -28,7 +28,8 @@ public class BookService {
         List<BookEntity> books = new ArrayList<>();
         if (booKPath.exists()) {
             FileUtil.walkFiles(booKPath, file -> {
-                books.add(BookEntity.init(file));
+                BookEntity init = BookEntity.init(file);
+                books.add(TextBookUtil.setMetInfo(readerPropertyConfig.getMetInfoPath() + File.separator + init.getTitle() + MET_INFO_SUFFIX, init));
             });
         }
         return books;
