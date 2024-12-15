@@ -21,7 +21,7 @@ public class BookEntity {
 
     public static BookEntity init(File file) {
         BookEntity bookEntity = new BookEntity();
-        bookEntity.setTitle(file.getName());
+        bookEntity.setTitle(file.getName().substring(0, file.getName().indexOf(".")));
         bookEntity.setSize(FileUtil.readableFileSize(file));
         bookEntity.setPath(file.getAbsolutePath());
         bookEntity.setFileType(FileType.convert(FileUtil.getSuffix(file)));
