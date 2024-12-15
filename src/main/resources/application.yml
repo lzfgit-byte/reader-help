@@ -2,6 +2,14 @@ server:
   port: 1322
 
 spring:
+  thymeleaf:
+    prefix: classpath:/frontend/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html
   web:
     resources:
-      static-locations: classpath:/static/
+      static-locations: classpath:/frontend/
