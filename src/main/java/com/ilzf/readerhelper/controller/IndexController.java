@@ -1,5 +1,7 @@
-package com.ilzf.reader_helper.controller;
+package com.ilzf.readerhelper.controller;
 
+import com.ilzf.readerhelper.config.ReaderPropertyConfig;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
+    @Resource
+    private ReaderPropertyConfig readerPropertyConfig;
 
     /**
      * get /
