@@ -60,10 +60,9 @@ public class TextBookUtil {
     }
 
     public static BookEntity setMetInfo(String mateInfoPath, BookEntity entity) {
-        String matInfoStr = FileUtil.readUtf8String(mateInfoPath);
-        if (StrUtil.isNotEmpty(matInfoStr)) {
-            JSONObject entries = JSONUtil.parseObj(matInfoStr);
-            MetInfo matInfo = JSONUtil.toBean(entries, MetInfo.class);
+        List<String> metInfos = FileUtil.readLines(mateInfoPath, StandardCharsets.UTF_8);
+        if (!metInfos.isEmpty()) {
+            MetInfo matInfo = MetInfo.toBean(metInfos);
             entity.setCovertImage(matInfo.getCoverImg());
             entity.setIntroduction(matInfo.getIntro());
             entity.setAuthor(matInfo.getAuthor());
