@@ -25,7 +25,8 @@ public class TextBookUtil {
         String content = "";
         String title = "";
         for (String line : lines) {
-            if (((line.startsWith("第") && (line.contains("章") || line.contains("回"))) || line.contains("创作手记") || line.contains("后记") || line.contains("楔子")) && line.length() < 30) {
+            if (((line.startsWith("第") && (line.contains("章") || line.contains("回") || line.contains("节") || line.contains("卷")))
+                    || line.contains("创作手记") || line.contains("后记") || line.contains("楔子") || (line.contains("序") && line.length() < 5)) && line.length() < 30) {
                 if (!StrUtil.isEmpty(content)) {
                     if (StrUtil.isEmpty(title)) {
                         String[] split = content.split("<br/>\n");

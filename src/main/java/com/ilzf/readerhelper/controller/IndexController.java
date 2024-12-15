@@ -6,16 +6,12 @@ import com.ilzf.readerhelper.entity.BookEntity;
 import com.ilzf.readerhelper.entity.ChapterEntity;
 import com.ilzf.readerhelper.service.BookService;
 import jakarta.annotation.Resource;
-import lombok.val;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
