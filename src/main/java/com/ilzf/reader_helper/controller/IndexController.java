@@ -14,9 +14,11 @@ public class IndexController {
     @RequestMapping(value = "/")
     public ModelAndView test(ModelAndView mv) {
         mv.setViewName("/index");
-        mv.addObject("title","欢迎使用Thymeleaf!");
+        mv.addObject("title", "欢迎使用Thymeleaf!");
+        System.out.println("");
         return mv;
     }
+
     @GetMapping(value = "/d")
     public String dd() {
         //返回静态页面index.html

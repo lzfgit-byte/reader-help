@@ -3,7 +3,7 @@ server:
 
 spring:
   thymeleaf:
-    prefix: classpath:/frontend/
+    prefix: classpath:/templates/
     suffix: .html
     mode: HTML5
     encoding: UTF-8
@@ -12,4 +12,4 @@ spring:
       content-type: text/html
   web:
     resources:
-      static-locations: classpath:/frontend/
+      static-locations: classpath:/
