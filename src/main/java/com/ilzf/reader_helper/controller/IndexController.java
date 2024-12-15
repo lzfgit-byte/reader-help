@@ -1,9 +1,9 @@
 package com.ilzf.reader_helper.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController(value = "/")
+@Controller
 public class IndexController {
 
     /**
@@ -12,6 +12,11 @@ public class IndexController {
     @GetMapping(value = "/")
     public String index() {
         //返回静态页面index.html
-        return "index";
+        return "forward:/frontend/index.html";
+    }
+    @GetMapping(value = "/d")
+    public String dd() {
+        //返回静态页面index.html
+        return "dddd";
     }
 }
