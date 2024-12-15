@@ -15,11 +15,15 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class BookService {
     @Resource
     private ReaderPropertyConfig readerPropertyConfig;
+
+    private final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
 
     public List<BookEntity> listBooks() {
         File booKPath = new File(readerPropertyConfig.getPath());
@@ -51,7 +55,7 @@ public class BookService {
                                 title = "第%s章[自动]".formatted(chapters.size() + 1);
                             }
                         }
-                        chapters.add(ChapterEntity.builder().title(title).content(content).id(DigestUtil.md5Hex(title)).build());
+                        setChapter(title, content, result, chapters);
                     }
                     title = line;
                     content = "";
@@ -59,10 +63,24 @@ public class BookService {
                 }
                 content += line + "\n";
             }
-            chapters.add(ChapterEntity.builder().title(title).content(content).id(DigestUtil.md5Hex(title)).build());
+            setChapter(title, content, result, chapters);
             result.setChapters(chapters);
         }
 
         return result;
+    }
+
+    private void setChapter(String title, String content, BookEntity result, List<ChapterEntity> chapters) {
+        ChapterEntity entity = ChapterEntity.builder().title(title).content(content).id(DigestUtil.md5Hex(title + result.getTitle())).build();
+        chapters.add(entity);
+        chapterEntityCache.put(entity.getId(), entity);
+    }
+
+    public String getContent(String id) {
+        ChapterEntity entity = chapterEntityCache.get(id);
+        if (entity == null) {
+            return "";
+        }
+        return entity.getContent();
     }
 }

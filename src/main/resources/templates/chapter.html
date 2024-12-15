@@ -7,8 +7,9 @@
 <body>
 <div id="chapter">
   <ul>
-    <li th:each="chapter: ${chapters}" th:text="${chapter.title}" th:id="${chapter.id}"
-        th:href="@{/read/{id}(id=${chapter.id})}"></li>
+    <li th:each="chapter: ${chapters}">
+      <a th:href="@{/content(id=${chapter.id})}" th:text="${chapter.title}"></a>
+    </li>
   </ul>
 </div>
 </body>

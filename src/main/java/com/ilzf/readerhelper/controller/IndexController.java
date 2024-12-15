@@ -35,11 +35,24 @@ public class IndexController {
         return mv;
     }
 
+    /**
+     * get /bookinfo
+     */
     @GetMapping(value = "/bookinfo")
     public ModelAndView bookInfo(ModelAndView mv, @RequestParam("path") String path) {
         mv.setViewName("/chapter");
         List<ChapterEntity> detail = bookService.getDetail(path).getChapters();
         mv.addObject("chapters", detail);
+        return mv;
+    }
+
+    /**
+     * get /content
+     */
+    @GetMapping(value = "/content")
+    public ModelAndView content(ModelAndView mv, @RequestParam("id") String id) {
+        mv.setViewName("/content");
+        mv.addObject("content", bookService.getContent(id));
         return mv;
     }
 }
