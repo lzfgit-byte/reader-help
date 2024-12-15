@@ -2,11 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${title}"/>
+  <title>reader_helper</title>
 </head>
 <body>
-<p th:text="${title}"/>
-<h1 th:text="${title}"></h1>
+<div id="books">
+  <ul>
+    <li th:each="book: ${books}">
+      <a th:href="@{/bookinfo/{path}(path=${book.path})}" th:text="${book.title}"></a>
+      <span th:text="${book.size}"></span>
+    </li>
+  </ul>
+</div>
 
 
 <script src="/scripts/main.js"></script>

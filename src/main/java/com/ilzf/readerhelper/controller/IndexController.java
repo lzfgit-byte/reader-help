@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import lombok.val;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,9 +33,9 @@ public class IndexController {
         return mv;
     }
 
-    @GetMapping(value = "/d")
-    public String dd() {
+    @GetMapping(value = "/bookinfo/{path}")
+    public BookEntity bookInfo(@PathVariable String path) {
         //返回静态页面index.html
-        return "dddd";
+        return null;
     }
 }
