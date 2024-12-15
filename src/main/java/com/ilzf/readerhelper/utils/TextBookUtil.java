@@ -3,8 +3,11 @@ package com.ilzf.readerhelper.utils;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.ilzf.readerhelper.entity.BookEntity;
 import com.ilzf.readerhelper.entity.ChapterEntity;
+import com.ilzf.readerhelper.entity.MetInfo;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -54,5 +57,17 @@ public class TextBookUtil {
         ChapterEntity entity = ChapterEntity.builder().title(title).content(content).id(DigestUtil.md5Hex(title + result.getTitle())).build();
         chapters.add(entity);
         chapterEntityCache.put(entity.getId(), entity);
+    }
+
+    public static BookEntity setMetInfo(String mateInfoPath, BookEntity entity) {
+        String matInfoStr = FileUtil.readUtf8String(mateInfoPath);
+        if (StrUtil.isNotEmpty(matInfoStr)) {
+            JSONObject entries = JSONUtil.parseObj(matInfoStr);
+            MetInfo matInfo = JSONUtil.toBean(entries, MetInfo.class);
+            entity.setCovertImage(matInfo.getCoverImg());
+            entity.setIntroduction(matInfo.getIntro());
+            entity.setAuthor(matInfo.getAuthor());
+        }
+        return entity;
     }
 }

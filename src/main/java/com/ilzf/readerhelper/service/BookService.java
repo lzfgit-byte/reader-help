@@ -38,6 +38,9 @@ public class BookService {
         File file = new File(path);
         BookEntity result = BookEntity.init(file);
         if (!loadChapter) {
+            if (FileType.TXT == result.getFileType()) {
+                result = TextBookUtil.setMetInfo(readerPropertyConfig.getMetInfoPath() + File.separator + result.getTitle() + "." + "metinfo", result);
+            }
             return result;
         }
         if (FileType.TXT == result.getFileType()) {

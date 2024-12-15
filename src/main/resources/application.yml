@@ -2,7 +2,7 @@ server:
   port: 1322
 reader:
   path: "D:/books/content"
-  met-info: "D:/books/metinfo"
+  met-info-path: "D:/books/metinfo"
 spring:
   thymeleaf:
     prefix: classpath:/templates/

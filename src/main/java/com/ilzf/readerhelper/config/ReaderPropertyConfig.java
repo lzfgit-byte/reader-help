@@ -8,5 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ReaderPropertyConfig {
 
     private String path;
-    private String metInfo;
+    private String metInfoPath;
 }

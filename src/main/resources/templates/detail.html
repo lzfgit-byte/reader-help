@@ -6,5 +6,8 @@
 </head>
 <body>
 <a id="path" th:text="${detail.title}" th:href="@{/bookinfo(path=${detail.path})}"></a>
+<img id="cover" th:src="${detail.covertImage}">
+<div id="intro" th:text="${detail.introduction}"></div>
+<div id="author" th:text="${detail.author}"></div>
 </body>
 </html>
