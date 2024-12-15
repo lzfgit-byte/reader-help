@@ -5,6 +5,11 @@
   <title>目录页面</title>
 </head>
 <body>
-
+<div id="chapter">
+  <ul>
+    <li th:each="chapter: ${chapters}" th:text="${chapter.title}" th:id="${chapter.id}"
+        th:href="@{/read/{id}(id=${chapter.id})}"></li>
+  </ul>
+</div>
 </body>
 </html>

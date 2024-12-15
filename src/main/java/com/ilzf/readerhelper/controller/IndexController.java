@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
@@ -34,11 +35,11 @@ public class IndexController {
         return mv;
     }
 
-    @GetMapping(value = "/bookinfo/{path}")
-    public ModelAndView bookInfo(@PathVariable String path, ModelAndView mv) {
+    @GetMapping(value = "/bookinfo")
+    public ModelAndView bookInfo(ModelAndView mv, @RequestParam("path") String path) {
         mv.setViewName("/chapter");
-        BookEntity detail = bookService.getDetail(path);
-        mv.addObject("detail", detail);
+        List<ChapterEntity> detail = bookService.getDetail(path).getChapters();
+        mv.addObject("chapters", detail);
         return mv;
     }
 }
