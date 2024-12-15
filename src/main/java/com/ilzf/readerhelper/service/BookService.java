@@ -36,19 +36,22 @@ public class BookService {
         return books;
     }
 
-    public BookEntity getDetail(String path) {
+    public BookEntity getDetail(String path, boolean loadChapter) {
         File file = new File(path);
         BookEntity result = BookEntity.init(file);
+        if (!loadChapter) {
+            return result;
+        }
         if (FileType.TXT == result.getFileType()) {
             List<String> lines = FileUtil.readLines(file, StandardCharsets.UTF_8);
             List<ChapterEntity> chapters = new ArrayList<>();
             String content = "";
             String title = "";
             for (String line : lines) {
-                if (line.startsWith("第") && (line.contains("章") || line.contains("回")) && line.length() < 30) {
+                if (((line.startsWith("第") && (line.contains("章") || line.contains("回"))) || line.contains("创作手记") || line.contains("后记") || line.contains("楔子")) && line.length() < 30) {
                     if (!StrUtil.isEmpty(content)) {
                         if (StrUtil.isEmpty(title)) {
-                            String[] split = content.split("\n");
+                            String[] split = content.split("<br/>\n");
                             if (split.length > 0 && split[0].length() < 30) {
                                 title = split[0];
                             } else {
@@ -61,13 +64,19 @@ public class BookService {
                     content = "";
                     continue;
                 }
-                content += line + "\n";
+                if (StrUtil.isNotEmpty(line)) {
+                    content += line + "<br/>\n";
+                }
             }
             setChapter(title, content, result, chapters);
             result.setChapters(chapters);
         }
 
         return result;
+    }
+
+    public BookEntity getDetail(String path) {
+        return getDetail(path, true);
     }
 
     private void setChapter(String title, String content, BookEntity result, List<ChapterEntity> chapters) {

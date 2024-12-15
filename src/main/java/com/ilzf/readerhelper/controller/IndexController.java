@@ -36,6 +36,16 @@ public class IndexController {
     }
 
     /**
+     * detail /detail
+     */
+    @GetMapping(value = "/detail")
+    public ModelAndView detail(ModelAndView mv, @RequestParam("path") String path) {
+        mv.setViewName("/detail");
+        mv.addObject("detail", bookService.getDetail(path, false));
+        return mv;
+    }
+
+    /**
      * get /bookinfo
      */
     @GetMapping(value = "/bookinfo")
