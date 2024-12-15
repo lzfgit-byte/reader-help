@@ -3,6 +3,7 @@ package com.ilzf.readerhelper.controller;
 import cn.hutool.core.io.FileUtil;
 import com.ilzf.readerhelper.config.ReaderPropertyConfig;
 import com.ilzf.readerhelper.entity.BookEntity;
+import com.ilzf.readerhelper.entity.ChapterEntity;
 import com.ilzf.readerhelper.service.BookService;
 import jakarta.annotation.Resource;
 import lombok.val;
@@ -27,15 +28,17 @@ public class IndexController {
      */
     @RequestMapping(value = "/")
     public ModelAndView test(ModelAndView mv) {
-        List<BookEntity> books = bookService.listFiles();
+        List<BookEntity> books = bookService.listBooks();
         mv.setViewName("/index");
         mv.addObject("books", books);
         return mv;
     }
 
     @GetMapping(value = "/bookinfo/{path}")
-    public BookEntity bookInfo(@PathVariable String path) {
-        //返回静态页面index.html
-        return null;
+    public ModelAndView bookInfo(@PathVariable String path, ModelAndView mv) {
+        mv.setViewName("/chapter");
+        BookEntity detail = bookService.getDetail(path);
+        mv.addObject("detail", detail);
+        return mv;
     }
 }

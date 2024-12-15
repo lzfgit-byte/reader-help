@@ -17,7 +17,18 @@ public enum FileType {
     FLV("flv"),
     RMVB("rmvb"),
     MKV("mkv");
-    private String name;
+    private final String name;
+
+    public static FileType convert(String name) {
+        FileType[] values = values();
+        for (FileType value : values) {
+            if (value.name.equals(name)) {
+                return value;
+            }
+        }
+
+        return FileType.TXT;
+    }
 
     FileType(String name) {
         this.name = name;
