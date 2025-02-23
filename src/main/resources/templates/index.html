@@ -4,32 +4,50 @@
   <meta charset="UTF-8">
   <title>列表</title>
   <script src="/scripts/jquery-3.7.1.js"></script>
+  <link rel="stylesheet" href="/scripts/layui/css/layui.css">
+  <link rel="stylesheet" href="/styles/index.css">
+  <script src="/scripts/layui/layui.js"></script>
 </head>
 <body>
-<div id="books">
-  <ul>
-    <li th:each="book: ${books}">
-      <a th:href="@{/detail(path=${book.path})}" th:text="${book.title}"></a>
-      <span th:text="${book.size}"></span>
-      <div>
-        <span th:text="${book.covertImage}"></span>
-      </div>
-    </li>
-  </ul>
-</div>
-<div id="addNew">
-  <div style="display: inline-flex;flex-direction: column">
-    <div>
-      <input placeholder="图书名字"/>
-    </div>
-    <div>
-      <input placeholder="图书简介"/>
-    </div>
-    <div>
-      <input placeholder="图书封面"/>
-    </div>
+
+<div class="container">
+  <div class="header">
+    <button type="button" class="layui-btn" id="addNew">新增</button>
+  </div>
+  <div class="body">
+    <table lay-filter="demo" style="width: 100%">
+      <thead>
+      <tr>
+        <th lay-data="{field:'bookName', width:150,unresize:true}">书名</th>
+        <th lay-data="{field:'desc', width:200}">大小</th>
+        <th lay-data="{field:'image'}">封面</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="book: ${books}">
+        <td><a th:href="@{/detail(path=${book.path})}" th:text="${book.title}" style="color: blue;cursor: pointer"></a>
+        </td>
+        <td><span th:text="${book.size}"></span></td>
+        <td><span th:text="${book.covertImage}"></span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div id="books" style="display: none">
+    <ul>
+      <li th:each="book: ${books}">
+        <a th:href="@{/detail(path=${book.path})}" th:text="${book.title}"></a>
+        <span th:text="${book.size}"></span>
+        <div>
+          <span th:text="${book.covertImage}"></span>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
+
 
 <script src="/scripts/main.js"></script>
 </body>

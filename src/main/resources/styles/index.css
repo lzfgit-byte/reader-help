@@ -1,0 +1,29 @@
+body {
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: end;
+}
+
+.body {
+  width: 100%;
+  box-sizing: border-box;
+}
