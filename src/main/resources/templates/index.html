@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>列表</title>
-  <!--  <script src="/scripts/jquery-3.7.1.js"></script>-->
+  <script src="/scripts/jquery-3.7.1.js"></script>
   <link rel="stylesheet" href="/scripts/layui/css/layui.css">
   <link rel="stylesheet" href="/styles/index.css">
   <script src="/scripts/layui/layui.js"></script>
@@ -21,6 +21,7 @@
         <th lay-data="{field:'bookName', width:150,unresize:true}">书名</th>
         <th lay-data="{field:'desc', width:200}">大小</th>
         <th lay-data="{field:'image'}">封面</th>
+        <th lay-data="{field:'image', width:80}">操作</th>
       </tr>
       </thead>
       <tbody>
@@ -29,6 +30,8 @@
         </td>
         <td><span th:text="${book.size}"></span></td>
         <td><span th:text="${book.covertImage}"></span></td>
+        <td><span onclick="deleteBook(this)" th:data="${book.title}" style="cursor: pointer;color: blue">删除</span>
+        </td>
       </tr>
       </tbody>
     </table>

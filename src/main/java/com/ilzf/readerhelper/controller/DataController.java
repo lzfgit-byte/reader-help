@@ -42,4 +42,13 @@ public class DataController {
 
         return "{\"message\":\"表单已成功提交！\"}";
     }
+
+    /**
+     * get delete
+     */
+    @GetMapping("/delete")
+    public String delete(@RequestParam("bookName") String bookName) {
+        this.bookService.delete(bookName);
+        return "ok";
+    }
 }

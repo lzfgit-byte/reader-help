@@ -30,12 +30,13 @@ layui.use(['layer', 'table', 'jquery'], function () {
             contentType: false, // 不设置内容类型
             success: function (response) {
               alert('提交成功: ' + response.message);
+              window.location.reload();
             },
             error: function (error) {
               alert('提交失败: ' + error.responseText);
+              window.location.reload();
             }
           });
-          window.location.reload();
         }
       });
     });
@@ -43,3 +44,22 @@ layui.use(['layer', 'table', 'jquery'], function () {
   })
 
 });
+
+function deleteBook(that) {
+  var b = confirm("删除？");
+  if (b) {
+    $.ajax({
+      url: '/data-operate/delete?bookName=' + $(that).attr('data'), // 后端接口地址
+      type: 'GET',
+      success: function (response) {
+        alert('提交成功: ');
+        window.location.reload();
+      },
+      error: function (error) {
+        alert('提交失败: ');
+        window.location.reload();
+      }
+    });
+  }
+
+}

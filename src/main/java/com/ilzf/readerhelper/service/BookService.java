@@ -82,4 +82,15 @@ public class BookService {
             throw new RuntimeException(e);
         }
     }
+
+    public void delete(String bookName) {
+        String metInfoPath = this.readerPropertyConfig.getMetInfoPath();
+        String metInfoPathFile = metInfoPath + File.separator + bookName + MET_INFO_SUFFIX;
+        String path = this.readerPropertyConfig.getPath();
+        path = path + File.separator + bookName + ".txt";
+
+
+        FileUtil.del(metInfoPathFile);
+        FileUtil.del(path);
+    }
 }
