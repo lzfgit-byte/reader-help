@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>列表</title>
+  <script src="/scripts/jquery-3.7.1.js"></script>
 </head>
 <body>
 <div id="books">
@@ -10,11 +11,25 @@
     <li th:each="book: ${books}">
       <a th:href="@{/detail(path=${book.path})}" th:text="${book.title}"></a>
       <span th:text="${book.size}"></span>
-      <img th:src="${book.covertImage}">
+      <div>
+        <span th:text="${book.covertImage}"></span>
+      </div>
     </li>
   </ul>
 </div>
-
+<div id="addNew">
+  <div style="display: inline-flex;flex-direction: column">
+    <div>
+      <input placeholder="图书名字"/>
+    </div>
+    <div>
+      <input placeholder="图书简介"/>
+    </div>
+    <div>
+      <input placeholder="图书封面"/>
+    </div>
+  </div>
+</div>
 
 <script src="/scripts/main.js"></script>
 </body>
