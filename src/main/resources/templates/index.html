@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>列表</title>
-  <script src="/scripts/jquery-3.7.1.js"></script>
+  <!--  <script src="/scripts/jquery-3.7.1.js"></script>-->
   <link rel="stylesheet" href="/scripts/layui/css/layui.css">
   <link rel="stylesheet" href="/styles/index.css">
   <script src="/scripts/layui/layui.js"></script>
@@ -45,6 +45,41 @@
         </div>
       </li>
     </ul>
+  </div>
+
+  <div id="addNform" style="display: none;">
+    <div style="width: 800px">
+      <div class="layui-form-item">
+        <label class="layui-form-label">文件:</label>
+        <div class="layui-input-block">
+          <input id="fileInput" type="file">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">书名:</label>
+        <div class="layui-input-block">
+          <input id="bookName" type="text" name="" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">作者:</label>
+        <div class="layui-input-block">
+          <input id="authorName" type="text" name="" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">描述:</label>
+        <div class="layui-input-block">
+          <textarea id="desc" name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">封面:</label>
+        <div class="layui-input-block">
+          <input id="coverImg" type="text" name="" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

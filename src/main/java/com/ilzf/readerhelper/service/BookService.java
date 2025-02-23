@@ -9,8 +9,10 @@ import com.ilzf.readerhelper.entity.MetInfo;
 import com.ilzf.readerhelper.utils.TextBookUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,5 +71,15 @@ public class BookService {
         String metInfoPath = this.readerPropertyConfig.getMetInfoPath();
         String path = metInfoPath + File.separator + bookTitle + MET_INFO_SUFFIX;
         FileUtil.writeString(metInfo.toString(), path, StandardCharsets.UTF_8);
+    }
+
+    public void transFile(MultipartFile file, String bookName) {
+        String path = this.readerPropertyConfig.getPath();
+        path = path + File.separator + bookName + "." + FileUtil.getSuffix(file.getOriginalFilename());
+        try {
+            FileUtil.writeBytes(file.getBytes(), path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
