@@ -10,6 +10,7 @@ import com.ilzf.readerhelper.entity.ChapterEntity;
 import com.ilzf.readerhelper.entity.MetInfo;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,13 @@ public class TextBookUtil {
     private static final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
 
     public static List<ChapterEntity> getChapterEntity(File file, BookEntity result) {
-        List<String> lines = FileUtil.readLines(file, StandardCharsets.UTF_8);
+        List<String> lines = FileUtil.readLines(file, Charset.forName("GB2312"));
         List<ChapterEntity> chapters = new ArrayList<>();
         String content = "";
         String title = "";
+        int count = 0;
         for (String line : lines) {
-            if (((line.startsWith("第") && (line.contains("章") || line.contains("回") || line.contains("节") || line.contains("卷")))
+            if ((((line.startsWith("第") || line.startsWith("正文 第")) && (line.contains("章") || line.contains("回") || line.contains("节") || line.contains("卷")))
                     || line.contains("创作手记") || line.contains("后记") || line.contains("楔子") || (line.contains("序") && line.length() < 5)) && line.length() < 30) {
                 if (!StrUtil.isEmpty(content)) {
                     if (StrUtil.isEmpty(title)) {
@@ -40,10 +42,12 @@ public class TextBookUtil {
                 }
                 title = line;
                 content = "";
+                System.out.println(++count + "/" + lines.size());
                 continue;
             }
             if (StrUtil.isNotEmpty(line)) {
                 content += line + "<br/>\n";
+                System.out.println(++count + "/" + lines.size());
             }
         }
         setChapter(title, content, result, chapters);

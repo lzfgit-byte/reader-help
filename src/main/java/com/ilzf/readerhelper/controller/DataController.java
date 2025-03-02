@@ -36,6 +36,8 @@ public class DataController {
         this.bookService.transFile(file, bookName);
         MetInfo metInfo = new MetInfo();
         metInfo.setAuthor(authorName);
+        //删掉desc里的换行符
+        desc = desc.replaceAll("\r\n", "");
         metInfo.setIntro(desc);
         metInfo.setCoverImg(coverImg);
         this.bookService.saveMetaData(metInfo, bookName);
