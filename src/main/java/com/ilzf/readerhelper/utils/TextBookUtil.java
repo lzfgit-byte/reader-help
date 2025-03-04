@@ -8,8 +8,12 @@ import cn.hutool.json.JSONUtil;
 import com.ilzf.readerhelper.entity.BookEntity;
 import com.ilzf.readerhelper.entity.ChapterEntity;
 import com.ilzf.readerhelper.entity.MetInfo;
+import lombok.SneakyThrows;
+import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -20,8 +24,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TextBookUtil {
     private static final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
 
+    @SneakyThrows
+    public static String detectEncoding(File file) {
+        UniversalDetector detector = new UniversalDetector(null);
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] buffer = new byte[4096]; // 每次读取 4KB
+            int nread;
+            while ((nread = fis.read(buffer)) > 0 && !detector.isDone()) {
+                detector.handleData(buffer, 0, nread);
+            }
+        }
+
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset(); // 重置检测器以便复用
+        return encoding;
+    }
+
     public static List<ChapterEntity> getChapterEntity(File file, BookEntity result) {
-        List<String> lines = FileUtil.readLines(file, Charset.forName("utf-8"));
+        List<String> lines = FileUtil.readLines(file, Charset.forName(detectEncoding(file)));
         List<ChapterEntity> chapters = new ArrayList<>();
         String content = "";
         String title = "";
