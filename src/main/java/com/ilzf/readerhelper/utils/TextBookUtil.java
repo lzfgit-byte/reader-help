@@ -21,7 +21,7 @@ public class TextBookUtil {
     private static final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
 
     public static List<ChapterEntity> getChapterEntity(File file, BookEntity result) {
-        List<String> lines = FileUtil.readLines(file, Charset.forName("GB2312"));
+        List<String> lines = FileUtil.readLines(file, Charset.forName("utf-8"));
         List<ChapterEntity> chapters = new ArrayList<>();
         String content = "";
         String title = "";
