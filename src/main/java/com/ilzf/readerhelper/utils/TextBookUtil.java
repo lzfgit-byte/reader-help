@@ -49,8 +49,14 @@ public class TextBookUtil {
         String title = "";
         int count = 0;
         for (String line : lines) {
-            if ((((line.startsWith("第") || line.startsWith("正文 第")) && (line.contains("章") || line.contains("回") || line.contains("节") || line.contains("卷")))
-                    || line.contains("创作手记") || line.contains("后记") || line.contains("楔子") || (line.contains("序") && line.length() < 5)) && line.length() < 30) {
+            if (!StrUtil.isNotEmpty(line)) {
+                continue;
+            }
+            boolean isTitleContent = (line.startsWith("第") || line.startsWith("正文 第") || line.equals("序"))
+                    && (line.contains("章") || line.contains("回") || line.contains("节") || (line.contains("卷") && (line.indexOf("卷") < 5)) || line.contains("创作手记") || line.contains("后记") ||
+                    line.contains("楔子") || (line.contains("序") && line.length() < 5));
+            boolean isTitle = isTitleContent && line.length() < 20;
+            if (isTitle) {
                 if (!StrUtil.isEmpty(content)) {
                     if (StrUtil.isEmpty(title)) {
                         String[] split = content.split("<br/>\n");
@@ -60,7 +66,7 @@ public class TextBookUtil {
                             title = "第%s章[自动]".formatted(chapters.size() + 1);
                         }
                     }
-                    setChapter(title, content, result, chapters);
+                    setChapter(chapters.size() + "|" + title, content, result, chapters);
                 }
                 title = line;
                 content = "";
@@ -72,7 +78,7 @@ public class TextBookUtil {
                 System.out.println(++count + "/" + lines.size());
             }
         }
-        setChapter(title, content, result, chapters);
+        setChapter(chapters.size() + "|" + title, content, result, chapters);
         return chapters;
     }
 
@@ -81,6 +87,16 @@ public class TextBookUtil {
     }
 
     private static void setChapter(String title, String content, BookEntity result, List<ChapterEntity> chapters) {
+        if (title.endsWith("节") || title.endsWith("章") || title.endsWith("回")) {
+            String[] split = content.split("\n");
+            for (String s : split) {
+                if (s.length() < 15 && s.trim().length() > 1) {
+                    title = title + " " + s.replace("<br/>", "");
+                    break;
+                }
+            }
+
+        }
         ChapterEntity entity = ChapterEntity.builder().title(title).content(content).id(DigestUtil.md5Hex(title + result.getTitle())).build();
         chapters.add(entity);
         chapterEntityCache.put(entity.getId(), entity);
