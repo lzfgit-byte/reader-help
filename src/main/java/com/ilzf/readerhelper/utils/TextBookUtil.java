@@ -38,7 +38,7 @@ public class TextBookUtil {
 
         detector.dataEnd();
         String encoding = detector.getDetectedCharset();
-        detector.reset(); // 重置检测器以便复用
+        detector.reset();
         return encoding;
     }
 
@@ -49,6 +49,7 @@ public class TextBookUtil {
         String title = "";
         int count = 0;
         for (String line : lines) {
+            line = line.trim();
             if (!StrUtil.isNotEmpty(line)) {
                 continue;
             }
