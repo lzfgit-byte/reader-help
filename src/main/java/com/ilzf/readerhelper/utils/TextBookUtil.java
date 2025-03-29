@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public class TextBookUtil {
     private static final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
@@ -48,13 +49,14 @@ public class TextBookUtil {
         StringBuilder content = new StringBuilder();
         String title = "";
         int count = 0;
-        for (String line : lines) {
-            line = line.trim();
-            if (!StrUtil.isNotEmpty(line)) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
+            if (!StrUtil.isNotEmpty(line) || isSeqContent(line)) {
                 continue;
             }
             boolean isTitle = isIsTitle(line);
-            if (isTitle) {
+            boolean isMa = isMaybeTitle(line, i, lines);
+            if (isTitle || isMa) {
                 if (!StrUtil.isEmpty(content.toString())) {
                     if (StrUtil.isEmpty(title)) {
                         String[] split = content.toString().split("<br/>\n");
@@ -72,7 +74,7 @@ public class TextBookUtil {
                 continue;
             }
             if (StrUtil.isNotEmpty(line)) {
-                content.append(line).append(isNewLine(line) ? "<br/>\n" : "");
+                content.append(wrapperNewLine(line, i, lines));
                 System.out.println(++count + "/" + lines.size());
             }
         }
@@ -80,20 +82,52 @@ public class TextBookUtil {
         return chapters;
     }
 
-    private static boolean isNewLine(String line) {
-        return line.endsWith("。") ||
+    private static boolean isSeqContent(String line) {
+        return line.startsWith("-") && line.endsWith("-") && line.length() < 5;
+    }
+
+    private static String wrapperNewLine(String line, int idx, List<String> lines) {
+        boolean afterEmpty = afterEmpty(line, idx, lines);
+        boolean a = line.endsWith("。") ||
                 (line.startsWith("“") && line.endsWith("”")) ||
                 (line.startsWith("\"") && line.endsWith("\"")) ||
                 (line.startsWith("…") && line.endsWith("…")) ||
-                line.endsWith("。”");
+                line.endsWith("。”") || afterEmpty;
+        if (a) {
+            return line + "<br/>\n";
+        }
+        return line;
     }
 
     private static boolean isIsTitle(String line) {
+
         List<String> startsWith = List.of("第", "正文 第", "序:", "番外篇");
         List<String> containsStr = List.of("章", "回", "节", "创作手记", "后记", "楔子");
         boolean isTitleContent = (line.equals("序") || startsWith.stream().anyMatch(line::startsWith))
                 && (containsStr.stream().anyMatch(line::contains) || (line.contains("卷") && (line.indexOf("卷") < 5)) || (line.contains("序") && line.length() < 15));
         return isTitleContent && line.length() < 20;
+    }
+
+    private static boolean preEmpty(String line, int idx, List<String> lines) {
+        if (idx > 1 && idx < lines.size() - 2) {
+            String p = lines.get(idx - 1);
+            String p2 = lines.get(idx - 2);
+            return p.trim().isEmpty() && p2.trim().isEmpty();
+        }
+        return false;
+    }
+
+    private static boolean afterEmpty(String line, int idx, List<String> lines) {
+        if (idx > 1 && idx < lines.size() - 2) {
+            String a = lines.get(idx + 1);
+            String a2 = lines.get(idx + 2);
+            return a.trim().isEmpty() && a2.trim().isEmpty();
+        }
+        return false;
+    }
+
+    private static boolean isMaybeTitle(String line, int idx, List<String> lines) {
+        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 10 && Stream.of("【").noneMatch(line::startsWith);
     }
 
     public static ChapterEntity getChapterContent(String id) {
@@ -104,10 +138,14 @@ public class TextBookUtil {
         if (title.endsWith("节") || title.endsWith("章") || title.endsWith("回")) {
             String[] split = content.split("\n");
             for (String s : split) {
-                if (s.length() < 15 && s.trim().length() > 1) {
+                if (s.trim().isEmpty()) {
+                    continue;
+                }
+                if (s.trim().length() < 20 && s.trim().length() > 1) {
                     title = title + " " + s.replace("<br/>", "");
                     break;
                 }
+                break;
             }
 
         }
