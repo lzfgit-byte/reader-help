@@ -45,7 +45,7 @@ public class TextBookUtil {
     public static List<ChapterEntity> getChapterEntity(File file, BookEntity result) {
         List<String> lines = FileUtil.readLines(file, Charset.forName(detectEncoding(file)));
         List<ChapterEntity> chapters = new ArrayList<>();
-        String content = "";
+        StringBuilder content = new StringBuilder();
         String title = "";
         int count = 0;
         for (String line : lines) {
@@ -53,34 +53,47 @@ public class TextBookUtil {
             if (!StrUtil.isNotEmpty(line)) {
                 continue;
             }
-            boolean isTitleContent = (line.startsWith("第") || line.startsWith("正文 第") || line.equals("序"))
-                    && (line.contains("章") || line.contains("回") || line.contains("节") || (line.contains("卷") && (line.indexOf("卷") < 5)) || line.contains("创作手记") || line.contains("后记") ||
-                    line.contains("楔子") || (line.contains("序") && line.length() < 5));
-            boolean isTitle = isTitleContent && line.length() < 20;
+            boolean isTitle = isIsTitle(line);
             if (isTitle) {
-                if (!StrUtil.isEmpty(content)) {
+                if (!StrUtil.isEmpty(content.toString())) {
                     if (StrUtil.isEmpty(title)) {
-                        String[] split = content.split("<br/>\n");
+                        String[] split = content.toString().split("<br/>\n");
                         if (split.length > 0 && split[0].length() < 30) {
                             title = split[0];
                         } else {
                             title = "第%s章[自动]".formatted(chapters.size() + 1);
                         }
                     }
-                    setChapter(chapters.size() + "|" + title, content, result, chapters);
+                    setChapter(chapters.size() + "|" + title, content.toString(), result, chapters);
                 }
                 title = line;
-                content = "";
+                content = new StringBuilder();
                 System.out.println(++count + "/" + lines.size());
                 continue;
             }
             if (StrUtil.isNotEmpty(line)) {
-                content += line + "<br/>\n";
+                content.append(line).append(isNewLine(line) ? "<br/>\n" : "");
                 System.out.println(++count + "/" + lines.size());
             }
         }
-        setChapter(chapters.size() + "|" + title, content, result, chapters);
+        setChapter(chapters.size() + "|" + title, content.toString(), result, chapters);
         return chapters;
+    }
+
+    private static boolean isNewLine(String line) {
+        return line.endsWith("。") ||
+                (line.startsWith("“") && line.endsWith("”")) ||
+                (line.startsWith("\"") && line.endsWith("\"")) ||
+                (line.startsWith("…") && line.endsWith("…")) ||
+                line.endsWith("。”");
+    }
+
+    private static boolean isIsTitle(String line) {
+        List<String> startsWith = List.of("第", "正文 第", "序:", "番外篇");
+        List<String> containsStr = List.of("章", "回", "节", "创作手记", "后记", "楔子");
+        boolean isTitleContent = (line.equals("序") || startsWith.stream().anyMatch(line::startsWith))
+                && (containsStr.stream().anyMatch(line::contains) || (line.contains("卷") && (line.indexOf("卷") < 5)) || (line.contains("序") && line.length() < 15));
+        return isTitleContent && line.length() < 20;
     }
 
     public static ChapterEntity getChapterContent(String id) {
