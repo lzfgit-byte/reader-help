@@ -67,6 +67,13 @@ public class TextBookUtil {
                         }
                     }
                     setChapter(chapters.size() + "|" + title, content.toString(), result, chapters);
+                    title = "";
+                } else {
+                    if (StrUtil.isNotEmpty(title)) {
+                        //两个标题合并了
+                        setChapter(chapters.size() + "|" + title, title, result, chapters);
+                        title = "";
+                    }
                 }
                 title = line;
                 content = new StringBuilder();
@@ -79,6 +86,7 @@ public class TextBookUtil {
             }
         }
         setChapter(chapters.size() + "|" + title, content.toString(), result, chapters);
+        title = "";
         return chapters;
     }
 
@@ -127,7 +135,7 @@ public class TextBookUtil {
     }
 
     private static boolean isMaybeTitle(String line, int idx, List<String> lines) {
-        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 10 && Stream.of("【").noneMatch(line::startsWith);
+        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 20 && Stream.of("【").noneMatch(line::startsWith);
     }
 
     public static ChapterEntity getChapterContent(String id) {
