@@ -6,7 +6,7 @@ layui.use(['layer', 'table', 'jquery'], function () {
   $(function () {
     table.init('demo', {
       height: 600,
-      limit: 10
+      limit: 10000
     });
 
 

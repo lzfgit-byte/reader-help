@@ -3,8 +3,6 @@ package com.ilzf.readerhelper.utils;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.ilzf.readerhelper.entity.BookEntity;
 import com.ilzf.readerhelper.entity.ChapterEntity;
 import com.ilzf.readerhelper.entity.MetInfo;
@@ -13,7 +11,6 @@ import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,6 +21,7 @@ import java.util.stream.Stream;
 
 public class TextBookUtil {
     private static final Map<String, ChapterEntity> chapterEntityCache = new ConcurrentHashMap<>();
+    private static final boolean enableSmallTitle = false;
 
     @SneakyThrows
     public static String detectEncoding(File file) {
@@ -56,7 +54,7 @@ public class TextBookUtil {
             }
             boolean isTitle = isIsTitle(line);
             boolean isMa = isMaybeTitle(line, i, lines);
-            if (isTitle || isMa) {
+            if (isTitle || (isMa && enableSmallTitle)) {
                 if (!StrUtil.isEmpty(content.toString())) {
                     if (StrUtil.isEmpty(title)) {
                         String[] split = content.toString().split("<br/>\n");
@@ -95,6 +93,14 @@ public class TextBookUtil {
     }
 
     private static String wrapperNewLine(String line, int idx, List<String> lines) {
+        if (isMaybeTitle(line, idx, lines)) {
+            return line + "<br/>\n";
+        }
+
+        return canAppend(line, idx, lines);
+    }
+
+    private static String canAppend(String line, int idx, List<String> lines) {
         boolean afterEmpty = afterEmpty(line, idx, lines);
         boolean a = line.endsWith("。") ||
                 (line.startsWith("“") && line.endsWith("”")) ||
@@ -104,14 +110,21 @@ public class TextBookUtil {
         if (a) {
             return line + "<br/>\n";
         }
+        if (idx > 1) {
+            if (line.length() < 20 && StrUtil.isEmpty(lines.get(idx - 1)) && StrUtil.isEmpty(lines.get(idx + 1))) {
+                return line + "  ";
+            }
+        }
+
         return line;
     }
 
     private static boolean isIsTitle(String line) {
 
         List<String> startsWith = List.of("第", "正文 第", "序:", "番外篇");
+        List<String> endsWith = List.of("章", "回", "节");
         List<String> containsStr = List.of("章", "回", "节", "创作手记", "后记", "楔子");
-        boolean isTitleContent = (line.equals("序") || startsWith.stream().anyMatch(line::startsWith))
+        boolean isTitleContent = (line.equals("序") || startsWith.stream().anyMatch(line::startsWith) || endsWith.stream().anyMatch(line::endsWith))
                 && (containsStr.stream().anyMatch(line::contains) || (line.contains("卷") && (line.indexOf("卷") < 5)) || (line.contains("序") && line.length() < 15));
         return isTitleContent && line.length() < 20;
     }
@@ -135,7 +148,15 @@ public class TextBookUtil {
     }
 
     private static boolean isMaybeTitle(String line, int idx, List<String> lines) {
-        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 20 && Stream.of("【").noneMatch(line::startsWith);
+        if (idx > 0) {
+            String preLine = lines.get(idx - 1);
+            String newLine = canAppend(line, idx, lines);
+            if (isIsTitle(preLine) && (preLine.endsWith("章") || newLine.endsWith("回") || newLine.endsWith("节")) && !newLine.endsWith("\n")) {
+                return true;
+            }
+        }
+        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 30 && Stream.of("【").noneMatch(line::startsWith);
+
     }
 
     public static ChapterEntity getChapterContent(String id) {
@@ -149,7 +170,7 @@ public class TextBookUtil {
                 if (s.trim().isEmpty()) {
                     continue;
                 }
-                if (s.trim().length() < 20 && s.trim().length() > 1) {
+                if (s.trim().length() < 30 && s.trim().length() > 1) {
                     title = title + " " + s.replace("<br/>", "");
                     break;
                 }
