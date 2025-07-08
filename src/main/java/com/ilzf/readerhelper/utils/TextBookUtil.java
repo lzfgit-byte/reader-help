@@ -170,7 +170,7 @@ public class TextBookUtil {
                 if (s.trim().isEmpty()) {
                     continue;
                 }
-                if (s.trim().length() < 30 && s.trim().length() > 1) {
+                if (s.trim().length() < 25 && s.trim().length() > 1) {
                     title = title + " " + s.replace("<br/>", "");
                     break;
                 }
