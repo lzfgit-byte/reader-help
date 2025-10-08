@@ -155,7 +155,7 @@ public class TextBookUtil {
                 return true;
             }
         }
-        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 30 && Stream.of("【").noneMatch(line::startsWith);
+        return preEmpty(line, idx, lines) && afterEmpty(line, idx, lines) && line.length() < 30 && Stream.of("【", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳").noneMatch(line::startsWith);
 
     }
 
